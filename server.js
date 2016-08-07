@@ -5,7 +5,7 @@ const path = require('path');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/api/1', (req, res) => {
-    res.json(['text', 'date']);
+    res.send();
 });
 
 app.listen(3000, () => {
