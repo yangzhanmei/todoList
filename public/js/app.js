@@ -1,6 +1,18 @@
 const App = React.createClass({
-    render(){
-        return (<div>App</div>)
+    getInitialState: function () {
+        return {
+            elements: []
+        }
+    },
+    componentDidMount: function() {
+        $.get('/api/1', (elements) => {
+            this.setState({elements});
+        });
+    },
+    render: function() {
+        return <div>
+            {this.state.elements.join(',')}
+        </div>
     }
 });
 
