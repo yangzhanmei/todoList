@@ -1,7 +1,8 @@
 const App = React.createClass({
     getInitialState: function () {
         return {
-            todos: []
+            todos: [],
+            allChecked:false
         }
     },
     addTodos: function (event) {
@@ -64,7 +65,8 @@ const TodoList = React.createClass({
         this.props.deleteTodos(index);
     },
     render(){
-        return <div id="isChecked">
+        let className = this.props.isDone ? "isDone" : '';
+        return <div id="isChecked" className={className}>
             <input type="checkbox" checked={this.props.isDone}
                    onChange={this.changeStatus.bind(this, this.props.index)}/>
             <label>{this.props.item}</label>
