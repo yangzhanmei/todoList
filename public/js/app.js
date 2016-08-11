@@ -31,11 +31,28 @@ const App = React.createClass({
         todos[index].isDone = !todos[index].isDone;
         this.setState({todos});
     },
+    showItems: function (value) {
+        const todos = this.state.todos;
+        const todosIsActive = todos.filter(todo=>todo.isDone === false);
+        const todosIsDone = todos.filter(todo=>todo.isDone === true);
+        if (value == 'active') {
+            this.setState({todos: todosIsActive});
+        } else if (value == 'complete') {
+            this.setState({todos: todosIsDone});
+        } else {
+            this.setState({todos});
+        }
+    },
+    clearComplete: function () {
+        const todos = this.state.todos;
+        const todosIsActive = todos.filter(todo=>todo.isDone === false);
+        this.setState({todos: todosIsActive});
+    },
     render: function () {
         return <div>
             <input type="text" placeholder="what do you want to do ?" onKeyPress={this.addTodos}/>
             <Todo todos={this.state.todos} deleteTodos={this.deleteTodos} changeStatus={this.changeStatus}/>
-            <Footer todos={this.state.todos}/>
+            <Footer todos={this.state.todos} showItems={this.showItems} clearComplete={this.clearComplete}/>
         </div>
     }
 });
@@ -46,7 +63,8 @@ const Todo = React.createClass({
             <ul>
                 {this.props.todos.map((todo, index)=> {
                     return <TodoList key={index} index={index} isDone={todo.isDone} item={todo.item}
-                                     deleteTodos={this.props.deleteTodos} changeStatus={this.props.changeStatus}/>
+                                     deleteTodos={this.props.deleteTodos} changeStatus={this.props.changeStatus}
+                                     showItems={this.props.showItems}/>
                 })}
             </ul>
         </div>
@@ -72,18 +90,23 @@ const TodoList = React.createClass({
 });
 
 const Footer = React.createClass({
-
+    showItems: function (value) {
+        this.props.showItems(value);
+    },
+    clearComplete: function () {
+        this.props.clearComplete();
+    },
     render(){
         const todos = this.props.todos;
-        const todosIsNotDone = todos.filter(todo=>todo.isDone === false);
-        const count = todosIsNotDone.length;
+        const todosIsActive = todos.filter(todo=>todo.isDone === false);
+        const count = todosIsActive.length;
         return <div>
             <div>
                 <span>{count} item left</span>
-                <button>All</button>
-                <button>Active</button>
-                <button>Completed</button>
-                <button>Clear completed</button>
+                <button onClick={this.showItems.bind(this, 'all')}>All</button>
+                <button onClick={this.showItems.bind(this, 'active')}>Active</button>
+                <button onClick={this.showItems.bind(this, 'complete')}>Completed</button>
+                <button onClick={this.clearComplete}>Clear completed</button>
             </div>
         </div>
     }
