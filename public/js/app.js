@@ -2,7 +2,7 @@ const App = React.createClass({
     getInitialState: function () {
         return {
             todos: [],
-            allChecked:false
+            allChecked: false
         }
     },
     addTodos: function (event) {
@@ -31,15 +31,11 @@ const App = React.createClass({
         todos[index].isDone = !todos[index].isDone;
         this.setState({todos});
     },
-    componentDidMount: function () {
-        $.get('/api/1', (elements) => {
-            this.setState({elements});
-        });
-    },
     render: function () {
         return <div>
             <input type="text" placeholder="what do you want to do ?" onKeyPress={this.addTodos}/>
             <Todo todos={this.state.todos} deleteTodos={this.deleteTodos} changeStatus={this.changeStatus}/>
+            <Footer todos={this.state.todos}/>
         </div>
     }
 });
@@ -71,6 +67,24 @@ const TodoList = React.createClass({
                    onChange={this.changeStatus.bind(this, this.props.index)}/>
             <label>{this.props.item}</label>
             <button onClick={this.deleteTodos.bind(this, this.props.index)}>x</button>
+        </div>
+    }
+});
+
+const Footer = React.createClass({
+
+    render(){
+        const todos = this.props.todos;
+        const todosIsNotDone = todos.filter(todo=>todo.isDone === false);
+        const count = todosIsNotDone.length;
+        return <div>
+            <div>
+                <span>{count} item left</span>
+                <button>All</button>
+                <button>Active</button>
+                <button>Completed</button>
+                <button>Clear completed</button>
+            </div>
         </div>
     }
 });
